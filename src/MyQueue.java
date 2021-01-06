@@ -13,9 +13,10 @@ public class MyQueue {
         this.nItems = 0;
     }
 
+    // положить элемент (по очереди) FIFO
     public void push(long element) {
 
-        if (tail == head - 1 && nItems > 1) {
+        if (tail == head - 1 && nItems > 0 || head == 0 && tail == size - 1 && nItems > 0) { //tail == size - 1 && nItems > 1
             System.out.println("Очередь нельзя дальше заполнять: вытащите элемент или ничего не делайте");
         } else {
             if (tail == size - 1 && head != 0) {
@@ -26,12 +27,24 @@ public class MyQueue {
         }
     }
 
+    // вытащить (1-й элемент) FIFO
     public long pop() {
-        long tmp = queueArray[head];
-        queueArray[head++] = 0;
+        long tmp = 0;
+        if (tail == head - 1 && nItems == 0) {
+            System.out.println("Нельзя больше вытаскивать элементы: запушите элемент или ничего не делайте");
+        }
+        else {
+            if (head == size) {
+                head = 0;
+            }
+            tmp = queueArray[head];
+            queueArray[head++] = 0;
+            nItems--;
+        }
         return tmp;
     }
 
+    // Показать все элементы
     public void displayAll() {
         System.out.println("All elements:");
         for (int i = 0; i < size; i++) {
@@ -40,6 +53,7 @@ public class MyQueue {
         System.out.println();
     }
 
+    // Показать очередь
     public void displayQueue() {
         System.out.println("Queue: <-");
 
@@ -52,10 +66,17 @@ public class MyQueue {
             }
             System.out.println();
         } else {
-            for (int i = head; i < getSize(); i++) {
-                System.out.print(" |" + queueArray[i] + "| ");
+            if (head == 0) {
+                for (int i = head; i < getSize(); i++) {
+                    System.out.print(" |" + queueArray[i] + "| ");
+                }
+                System.out.println();
+            } else {
+                for (int i = head; i <= getSize(); i++) {
+                    System.out.print(" |" + queueArray[i] + "| ");
+                }
+                System.out.println();
             }
-            System.out.println();
         }
     }
 
@@ -66,12 +87,13 @@ public class MyQueue {
         return nItems;
     }
 
+    // Проверяем пустая ли очередь
     public boolean isEmpty() {
-        if (head == tail) {
-            System.out.println("Очередь пустая:");
+        if (nItems == 0) {
+            System.out.println("Очередь пустая");
             return true;
         } else {
-            System.out.println("Очередь непустая:");
+            System.out.println("Очередь непустая");
             return false;
         }
     }
@@ -80,36 +102,27 @@ public class MyQueue {
 class Main {
     public static void main(String[] args) {
         MyQueue myQueue = new MyQueue(10);
-        myQueue.push(1);
-        myQueue.push(23);
-        myQueue.push(-5);
-        myQueue.push(34);
-        myQueue.displayAll();
-        myQueue.displayQueue();
-        myQueue.pop();
-        myQueue.displayAll();
-        myQueue.displayQueue();
-        myQueue.pop();
-        myQueue.displayAll();
-        myQueue.displayQueue();
-        myQueue.push(2);
-        myQueue.push(24);
-        myQueue.push(-6);
-        myQueue.push(35);
-        myQueue.push(-7);
-        myQueue.push(36);
-
-        myQueue.push(1);
-        myQueue.push(2);
-        myQueue.displayAll();
-        myQueue.displayQueue();
-
-
-        myQueue.push(3);
-        myQueue.push(4);
 
         myQueue.displayAll();
-        myQueue.displayQueue();
         myQueue.isEmpty();
+        myQueue.push(23); // добавить
+        myQueue.push(10);
+        myQueue.push(11);
+        myQueue.push(12);
+        myQueue.displayAll(); // показать всё
+        myQueue.displayQueue(); // показать только очередь
+        myQueue.pop();
+        myQueue.pop();
+        myQueue.displayAll();
+        myQueue.pop();
+        myQueue.push(55);
+        myQueue.push(666);
+        myQueue.displayAll();
+        myQueue.isEmpty();
+        myQueue.pop();
+        myQueue.pop();
+        myQueue.displayAll();
+        myQueue.isEmpty();
+        myQueue.pop();
     }
 }
